@@ -1,0 +1,215 @@
+# Runs the full CinePop test suite on every push + PR.
+# Includes:
+#   • All test-*.js files (~295 assertions, ~80 s)
+#   • Performance audit (perf-audit.js)
+#   • Lint-style checks (syntax, no dead code refs, manifest valid)
+#
+# Status badge: add this to your README.md:
+#   ![Tests](https://github.com/<USER>/CinePop/actions/workflows/test.yml/badge.svg)
+
+name: Tests
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths-ignore:
+      - '**.md'
+      - 'icons/**'
+      - 'android-capacitor/src/**'  # auto-generated bundle
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+  schedule:
+    # Run nightly to catch upstream API breakage (IMDb / api.imdbapi.dev)
+    - cron: '0 6 * * *'   # 06:00 UTC daily
+
+# Cancel any in-progress run when a newer commit lands
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ────────────────────────────────────────────────────────────
+  # 1. Lint + sanity checks (fast — fails fast on obvious bugs)
+  # ────────────────────────────────────────────────────────────
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint + sanity
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: app.js syntax
+        run: node --check app.js
+
+      - name: sw.js syntax
+        run: node --check sw.js
+
+      - name: Cloudflare function syntax
+        run: node --check 'functions/api/imdb/[[path]].js'
+
+      - name: manifest.webmanifest is valid JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'))"
+
+      - name: capacitor.config.json is valid JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('android-capacitor/capacitor.config.json','utf8'))"
+
+      - name: wrangler.toml present
+        run: test -f wrangler.toml
+
+      - name: All manifest icons exist on disk
+        run: |
+          node -e "
+            const m = JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'));
+            for (const i of m.icons) {
+              if (!require('fs').existsSync(i.src)) {
+                console.error('Missing icon:', i.src); process.exit(1);
+              }
+              console.log('✓', i.src);
+            }
+          "
+
+      - name: Service worker version is current
+        run: |
+          v=$(grep -oE "CinePop-v[0-9]+" sw.js)
+          echo "Cache version: $v"
+          if [ -z "$v" ]; then echo "✗ sw.js has no CACHE constant"; exit 1; fi
+
+      - name: No dead function refs
+        run: |
+          # Verify all functions defined in app.js are also used somewhere
+          node -e "
+            const src = require('fs').readFileSync('app.js','utf8');
+            const fns = [...src.matchAll(/^(?:async )?function ([a-zA-Z_\$][a-zA-Z0-9_\$]*)/gm)].map(m => m[1]);
+            const dead = fns.filter(fn => (src.match(new RegExp('\\\\b' + fn + '\\\\b', 'g')) || []).length === 1);
+            if (dead.length) { console.error('Dead functions:', dead); process.exit(1); }
+            console.log('✓', fns.length, 'functions, none dead');
+          "
+
+  # ────────────────────────────────────────────────────────────
+  # 2. Full test suite (295 assertions)
+  # ────────────────────────────────────────────────────────────
+  test:
+    runs-on: ubuntu-latest
+    name: Test suite
+    needs: lint
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: tests/package.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install test deps
+        working-directory: tests
+        run: npm install --no-audit --no-fund
+
+      - name: Run all tests
+        working-directory: tests
+        run: node run-all.js --no-color
+        env:
+          # Slow down a bit to be a good neighbour to IMDb in CI
+          CI: 'true'
+
+  # ────────────────────────────────────────────────────────────
+  # 3. Performance audit (informational; doesn't block merges)
+  # ────────────────────────────────────────────────────────────
+  perf:
+    runs-on: ubuntu-latest
+    name: Performance audit
+    needs: lint
+    continue-on-error: true   # don't fail the workflow if upstream APIs are slow
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: tests/package.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install test deps
+        working-directory: tests
+        run: npm install --no-audit --no-fund
+
+      - name: Run performance audit
+        working-directory: tests
+        run: node perf-audit.js | tee ../perf-report.txt
+
+      - name: Upload performance report
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-report
+          path: perf-report.txt
+          retention-days: 30
+
+  # ────────────────────────────────────────────────────────────
+  # 4. Summary comment on PRs (optional, nice-to-have)
+  # ────────────────────────────────────────────────────────────
+  pr-summary:
+    runs-on: ubuntu-latest
+    name: PR summary
+    if: github.event_name == 'pull_request'
+    needs: [lint, test, perf]
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Comment results on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const results = {
+              lint:  '${{ needs.lint.result }}',
+              test:  '${{ needs.test.result }}',
+              perf:  '${{ needs.perf.result }}',
+            };
+            const icon = r => r === 'success' ? '✅' : r === 'failure' ? '❌' : '⚠️';
+            const body = [
+              '## 🧪 Test results',
+              '',
+              `${icon(results.lint)} **Lint + sanity:** ${results.lint}`,
+              `${icon(results.test)} **Test suite (295 assertions):** ${results.test}`,
+              `${icon(results.perf)} **Performance audit:** ${results.perf}`,
+              '',
+              `[Full logs](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+            ].join('\n');
+
+            // Find existing comment to update (one per PR)
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes('🧪 Test results')
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

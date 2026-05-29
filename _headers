@@ -1,0 +1,13 @@
+# Cloudflare Pages header overrides.
+# Keeps the SW + manifest fresh so PWA updates show up quickly.
+
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/manifest.webmanifest
+  Cache-Control: public, max-age=3600
+  Content-Type: application/manifest+json
+
+# Long-cache static icons (filenames are stable; bump CACHE in sw.js to refresh)
+/icons/*
+  Cache-Control: public, max-age=31536000, immutable

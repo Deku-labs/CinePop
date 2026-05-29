@@ -1,0 +1,68 @@
+<!-- CinePop Logo — V3: Dark theme variant (FIXED stripes) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" width="400" height="480">
+  <defs>
+    <linearGradient id="redD" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="100%" stop-color="#f5c518"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- "Cine" — bright yellow, slight glow -->
+  <text x="200" y="100"
+        font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif"
+        font-size="82" font-weight="900" letter-spacing="-2.5"
+        text-anchor="middle" fill="#f5c518"
+        filter="url(#glow)">Cine</text>
+
+  <!-- Popcorn cluster -->
+  <g filter="url(#glow)">
+    <circle cx="135" cy="195" r="26" fill="#fde68a" opacity="0.9"/>
+    <circle cx="170" cy="170" r="32" fill="#fef3c7"/>
+    <circle cx="210" cy="155" r="36" fill="#fff8d6"/>
+    <circle cx="255" cy="172" r="30" fill="#fef3c7"/>
+    <circle cx="288" cy="195" r="24" fill="#fde68a" opacity="0.9"/>
+    <g fill="url(#goldGrad)" stroke="#ffd84d" stroke-width="2">
+      <circle cx="160" cy="210" r="22"/>
+      <circle cx="200" cy="195" r="26"/>
+      <circle cx="245" cy="205" r="22"/>
+      <circle cx="220" cy="225" r="20"/>
+      <circle cx="180" cy="230" r="18"/>
+    </g>
+  </g>
+
+  <!-- Bucket -->
+  <g>
+    <defs>
+      <clipPath id="bucketClip3">
+        <path d="M 95 245 L 305 245 L 285 435 L 115 435 Z"/>
+      </clipPath>
+    </defs>
+    <path d="M 95 245 L 305 245 L 285 435 L 115 435 Z" fill="url(#redD)"/>
+
+    <!-- Split stripes (top + bottom only, clear band for text) -->
+    <g clip-path="url(#bucketClip3)">
+      <rect x="153" y="245" width="22" height="65" fill="#ffffff"/>
+      <rect x="225" y="245" width="22" height="65" fill="#ffffff"/>
+      <rect x="153" y="390" width="22" height="50" fill="#ffffff" transform="skewX(-1)"/>
+      <rect x="225" y="390" width="22" height="50" fill="#ffffff" transform="skewX(1)"/>
+    </g>
+
+    <path d="M 88 245 L 312 245 L 308 258 L 92 258 Z" fill="#fafafa"/>
+    <path d="M 95 245 L 305 245 L 302 252 L 98 252 Z" fill="#e5e7eb"/>
+    <text x="200" y="360"
+          font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif"
+          font-size="78" font-weight="900" letter-spacing="-1.5"
+          text-anchor="middle" fill="#ffffff">Pop</text>
+  </g>
+</svg>

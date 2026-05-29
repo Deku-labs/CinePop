@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+.wrangler/
+.vercel/
+
+# Test output
+tests/package-lock.json
+perf-report.txt

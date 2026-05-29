@@ -1,0 +1,63 @@
+<!-- CinePop Logo — V2: Modern flat (FIXED: text on solid panel, stripes don't bisect) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" width="400" height="480">
+  <defs>
+    <linearGradient id="redFlat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+  </defs>
+
+  <!-- "Cine" wordmark -->
+  <text x="200" y="100"
+        font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif"
+        font-size="86" font-weight="900" letter-spacing="-3"
+        text-anchor="middle" fill="#0b0b10">Cine</text>
+
+  <!-- Popcorn cluster -->
+  <g>
+    <circle cx="135" cy="195" r="26" fill="#fde68a"/>
+    <circle cx="170" cy="170" r="32" fill="#fef3c7"/>
+    <circle cx="210" cy="155" r="36" fill="#fff8d6"/>
+    <circle cx="255" cy="172" r="30" fill="#fef3c7"/>
+    <circle cx="288" cy="195" r="24" fill="#fde68a"/>
+    <g fill="#fffbeb" stroke="#f5c518" stroke-width="2.5">
+      <circle cx="160" cy="210" r="22"/>
+      <circle cx="200" cy="195" r="26"/>
+      <circle cx="245" cy="205" r="22"/>
+      <circle cx="220" cy="225" r="20"/>
+      <circle cx="180" cy="230" r="18"/>
+    </g>
+  </g>
+
+  <!-- ─── BUCKET ─── -->
+  <g>
+    <defs>
+      <clipPath id="bucketClip2">
+        <path d="M 95 245 L 305 245 L 285 435 L 115 435 Z"/>
+      </clipPath>
+    </defs>
+
+    <!-- Red body -->
+    <path d="M 95 245 L 305 245 L 285 435 L 115 435 Z" fill="url(#redFlat)"/>
+
+    <!-- 2 white vertical stripes — but split so they DON'T cross the text band -->
+    <g clip-path="url(#bucketClip2)">
+      <!-- Stripes top half (245 → 310) -->
+      <rect x="153" y="245" width="22" height="65" fill="#ffffff"/>
+      <rect x="225" y="245" width="22" height="65" fill="#ffffff"/>
+      <!-- Stripes bottom half (390 → 435) -->
+      <rect x="153" y="390" width="22" height="50" fill="#ffffff" transform="skewX(-1)"/>
+      <rect x="225" y="390" width="22" height="50" fill="#ffffff" transform="skewX(1)"/>
+    </g>
+
+    <!-- Rim -->
+    <path d="M 88 245 L 312 245 L 308 258 L 92 258 Z" fill="#fafafa"/>
+    <path d="M 95 245 L 305 245 L 302 252 L 98 252 Z" fill="#e5e7eb"/>
+
+    <!-- "Pop" wordmark — sits in clear red band between stripes -->
+    <text x="200" y="360"
+          font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif"
+          font-size="78" font-weight="900" letter-spacing="-1.5"
+          text-anchor="middle" fill="#ffffff">Pop</text>
+  </g>
+</svg>

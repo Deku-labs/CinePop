@@ -1,0 +1,65 @@
+<!-- CinePop App Icon — V4: Compact for favicon/app icon (FIXED text readability) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1a28"/>
+      <stop offset="100%" stop-color="#0b0b10"/>
+    </linearGradient>
+    <linearGradient id="redIcon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+    <radialGradient id="popcornGlow" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0%" stop-color="rgba(245,197,24,0.35)"/>
+      <stop offset="100%" stop-color="rgba(245,197,24,0)"/>
+    </radialGradient>
+    <clipPath id="bucketClipIcon">
+      <path d="M 100 270 L 412 270 L 380 470 L 132 470 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#bgGrad)"/>
+
+  <!-- Soft glow behind popcorn -->
+  <circle cx="256" cy="220" r="180" fill="url(#popcornGlow)"/>
+
+  <!-- Popcorn cluster -->
+  <g>
+    <circle cx="150" cy="190" r="32" fill="#fde68a" opacity="0.85"/>
+    <circle cx="200" cy="155" r="40" fill="#fef3c7"/>
+    <circle cx="256" cy="135" r="46" fill="#fff8d6"/>
+    <circle cx="312" cy="155" r="40" fill="#fef3c7"/>
+    <circle cx="362" cy="190" r="32" fill="#fde68a" opacity="0.85"/>
+    <g fill="#fffbeb" stroke="#f5c518" stroke-width="3.5">
+      <circle cx="190" cy="210" r="28"/>
+      <circle cx="256" cy="190" r="33"/>
+      <circle cx="320" cy="208" r="28"/>
+      <circle cx="222" cy="235" r="24"/>
+      <circle cx="290" cy="235" r="24"/>
+    </g>
+  </g>
+
+  <!-- Bucket -->
+  <g>
+    <path d="M 100 270 L 412 270 L 380 470 L 132 470 Z" fill="url(#redIcon)"/>
+
+    <!-- Stripes: top thin strip + bottom thin strip, leaving clear band for "Pop" -->
+    <g clip-path="url(#bucketClipIcon)">
+      <rect x="180" y="270" width="26" height="60" fill="#ffffff"/>
+      <rect x="306" y="270" width="26" height="60" fill="#ffffff"/>
+      <rect x="180" y="420" width="26" height="55" fill="#ffffff" transform="skewX(-1)"/>
+      <rect x="306" y="420" width="26" height="55" fill="#ffffff" transform="skewX(1)"/>
+    </g>
+
+    <!-- Rim -->
+    <path d="M 90 270 L 422 270 L 416 288 L 96 288 Z" fill="#fafafa"/>
+    <path d="M 100 270 L 412 270 L 408 282 L 104 282 Z" fill="#e5e7eb"/>
+
+    <!-- "Pop" — large, centered, clean red background -->
+    <text x="256" y="400"
+          font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif"
+          font-size="105" font-weight="900" letter-spacing="-2"
+          text-anchor="middle" fill="#ffffff">Pop</text>
+  </g>
+</svg>

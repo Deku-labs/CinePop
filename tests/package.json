@@ -1,0 +1,14 @@
+{
+  "name": "CinePop-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Headless E2E + unit tests for CinePop",
+  "scripts": {
+    "test": "node run-all.js",
+    "test:single": "node",
+    "perf": "node perf-audit.js"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

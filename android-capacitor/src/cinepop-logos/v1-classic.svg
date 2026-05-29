@@ -1,0 +1,92 @@
+<!-- CinePop Logo — V1: Classic stacked (Cine on top, Pop on bucket) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" width="400" height="480">
+  <defs>
+    <!-- Bucket red stripes gradient (warmer at top, deeper at bottom) -->
+    <linearGradient id="redGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e63946"/>
+      <stop offset="100%" stop-color="#b8222e"/>
+    </linearGradient>
+    <!-- White stripe with very subtle shading -->
+    <linearGradient id="whiteGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f0f0f3"/>
+    </linearGradient>
+    <!-- Popcorn kernel highlight -->
+    <radialGradient id="kernelGrad" cx="0.35" cy="0.35" r="0.7">
+      <stop offset="0%" stop-color="#fff8d6"/>
+      <stop offset="100%" stop-color="#f5c518"/>
+    </radialGradient>
+    <!-- Bucket bottom shadow -->
+    <radialGradient id="bucketShadow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="rgba(0,0,0,0.25)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- "Cine" wordmark on top -->
+  <text x="200" y="90"
+        font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif"
+        font-size="78" font-weight="800" letter-spacing="-2"
+        text-anchor="middle" fill="#15151b">Cine</text>
+
+  <!-- Soft ground shadow under bucket -->
+  <ellipse cx="200" cy="445" rx="120" ry="14" fill="url(#bucketShadow)"/>
+
+  <!-- ─── Popcorn pieces overflowing the top ─── -->
+  <g id="popcorn">
+    <!-- Back row (slightly darker for depth) -->
+    <circle cx="125" cy="175" r="22" fill="#ffe680" opacity="0.85"/>
+    <circle cx="155" cy="160" r="26" fill="#fff0a8" opacity="0.85"/>
+    <circle cx="200" cy="148" r="30" fill="#fff5b8" opacity="0.85"/>
+    <circle cx="245" cy="160" r="26" fill="#fff0a8" opacity="0.85"/>
+    <circle cx="280" cy="172" r="22" fill="#ffe680" opacity="0.85"/>
+
+    <!-- Front cluster of kernels (each is a bumpy blob) -->
+    <g fill="url(#kernelGrad)" stroke="#d9a800" stroke-width="1.5">
+      <path d="M 110 200 q -8 -22 12 -28 q 18 -10 24 8 q 14 -4 14 12 q 0 18 -22 18 q -22 4 -28 -10 z"/>
+      <path d="M 145 180 q -4 -24 18 -28 q 20 -6 22 14 q 16 0 12 18 q -2 18 -22 16 q -24 4 -30 -20 z"/>
+      <path d="M 180 168 q 0 -28 24 -28 q 22 0 22 18 q 18 2 14 22 q -4 18 -22 16 q -22 2 -30 -16 q -8 -4 -8 -12 z"/>
+      <path d="M 218 175 q 4 -26 26 -22 q 20 -2 18 18 q 14 4 8 20 q -8 16 -24 12 q -22 4 -28 -16 q 0 -4 0 -12 z"/>
+      <path d="M 250 192 q -2 -22 18 -22 q 18 -4 22 12 q 14 2 8 18 q -4 16 -20 14 q -22 6 -28 -22 z"/>
+      <path d="M 162 215 q -4 -16 12 -18 q 14 -6 18 8 q 12 -2 10 12 q 0 14 -16 14 q -18 2 -24 -16 z"/>
+      <path d="M 210 215 q 0 -18 18 -16 q 14 -2 14 14 q 10 0 8 12 q -4 14 -18 12 q -18 0 -22 -22 z"/>
+    </g>
+  </g>
+
+  <!-- ─── BUCKET ─── -->
+  <!-- Bucket shape (trapezoid, slightly wider at top) -->
+  <!-- Body uses 5 vertical red+white stripes -->
+  <g>
+    <!-- Bucket back/clip path -->
+    <defs>
+      <clipPath id="bucketClip">
+        <path d="M 95 235 L 305 235 L 285 430 L 115 430 Z"/>
+      </clipPath>
+    </defs>
+
+    <!-- Red base behind everything -->
+    <path d="M 95 235 L 305 235 L 285 430 L 115 430 Z" fill="url(#redGrad)"/>
+
+    <!-- White vertical stripes -->
+    <g clip-path="url(#bucketClip)">
+      <rect x="125" y="230" width="32" height="210" fill="url(#whiteGrad)" transform="skewX(-3.2)"/>
+      <rect x="195" y="230" width="32" height="210" fill="url(#whiteGrad)" transform="skewX(-1)"/>
+      <rect x="265" y="230" width="32" height="210" fill="url(#whiteGrad)" transform="skewX(1.5)"/>
+    </g>
+
+    <!-- Top rim (slightly darker, gives 3D feel) -->
+    <ellipse cx="200" cy="235" rx="105" ry="14" fill="#ffffff" stroke="#d4d4d8" stroke-width="2"/>
+    <ellipse cx="200" cy="232" rx="105" ry="11" fill="#fafafa"/>
+
+    <!-- "Pop" wordmark on the bucket — slightly tilted with the bucket -->
+    <text x="200" y="345"
+          font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif"
+          font-size="68" font-weight="900" letter-spacing="-1"
+          text-anchor="middle" fill="#ffffff"
+          stroke="rgba(0,0,0,0.15)" stroke-width="0.5"
+          style="paint-order: stroke fill;">Pop</text>
+
+    <!-- Bottom rim shadow -->
+    <ellipse cx="200" cy="430" rx="85" ry="6" fill="rgba(0,0,0,0.2)"/>
+  </g>
+</svg>

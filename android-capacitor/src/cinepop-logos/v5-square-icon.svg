@@ -1,0 +1,152 @@
+<!-- CinePop App Icon — V5: Square icon with the centered V5 horizontal logo (perfect brand unity) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Dark premium background gradient matching PWA theme -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1a28"/>
+      <stop offset="100%" stop-color="#0b0b10"/>
+    </linearGradient>
+
+    <!-- Smooth drop shadow for premium depth -->
+    <filter id="premium-shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="2" dy="5" stdDeviation="4" flood-color="#000000" flood-opacity="0.65" />
+    </filter>
+
+    <!-- Metallic silver-white gradient for "Cine" -->
+    <linearGradient id="silverGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="60%" stop-color="#f4f4f5"/>
+      <stop offset="100%" stop-color="#a1a1aa"/>
+    </linearGradient>
+
+    <!-- Vibrant red-orange-yellow cinematic gradient for "Pop" -->
+    <linearGradient id="neonRedGrad" x1="0" y1="0" x2="1" y2="0.2">
+      <stop offset="0%" stop-color="#ff1e56"/>
+      <stop offset="50%" stop-color="#ff3333"/>
+      <stop offset="100%" stop-color="#ff9900"/>
+    </linearGradient>
+
+    <!-- Warm golden gradient for the popcorn bucket -->
+    <linearGradient id="bucketRed" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e63946"/>
+      <stop offset="100%" stop-color="#b8222e"/>
+    </linearGradient>
+
+    <!-- Delicious hot buttered popcorn yellow-gold gradient -->
+    <linearGradient id="goldPopGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="30%" stop-color="#fcd34d"/>
+      <stop offset="70%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+
+    <!-- Inner gold shadow/highlight for the popcorn "o" -->
+    <radialGradient id="popKernHighlight" cx="0.35" cy="0.35" r="0.65">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="40%" stop-color="#fcd34d"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </radialGradient>
+  </defs>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&amp;display=swap');
+    
+    .brand-text {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 78px;
+      font-weight: 900;
+      letter-spacing: -2.5px;
+      text-transform: uppercase;
+    }
+    .cine-part {
+      fill: url(#silverGrad);
+    }
+    .pop-part {
+      fill: url(#neonRedGrad);
+    }
+  </style>
+
+  <!-- Rounded square background -->
+  <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#bgGrad)"/>
+
+  <!-- Centered V5 Horizontal Logo (Scaled by 0.733 and translated to center perfectly) -->
+  <g transform="translate(36, 166) scale(0.733)">
+    
+    <!-- ─── SMALL BUCKET ON THE LEFT ─── -->
+    <g transform="translate(30, 20)" filter="url(#premium-shadow)">
+      <!-- Back Popcorn Row -->
+      <g fill="#f59e0b" opacity="0.8">
+        <circle cx="56" cy="46" r="13"/>
+        <circle cx="76" cy="34" r="16"/>
+        <circle cx="96" cy="46" r="13"/>
+      </g>
+
+      <!-- Front Popcorn Cluster (Bumpy detailed kernels) -->
+      <g fill="url(#goldPopGrad)" stroke="#d97706" stroke-width="1.2">
+        <!-- Left Kernel -->
+        <path d="M 46 54 C 40 46, 52 38, 58 46 C 64 38, 70 48, 64 54 C 70 60, 58 64, 52 58 C 42 62, 40 54, 46 54 Z"/>
+        <!-- Right Kernel -->
+        <path d="M 88 54 C 82 46, 94 38, 100 46 C 106 38, 112 48, 106 54 C 112 60, 100 64, 94 58 C 84 62, 82 54, 88 54 Z"/>
+        <!-- Top Center Kernel -->
+        <path d="M 68 40 C 62 30, 78 22, 84 32 C 92 24, 98 34, 90 42 C 96 50, 84 56, 76 48 C 66 52, 62 42, 68 40 Z"/>
+        <!-- Front Center Kernel -->
+        <path d="M 62 60 C 56 52, 70 44, 76 52 C 82 44, 88 54, 82 60 C 88 68, 76 72, 70 64 C 60 68, 56 60, 62 60 Z"/>
+      </g>
+
+      <!-- Popcorn Glossy Highlights -->
+      <circle cx="73" cy="46" r="3" fill="#ffffff" opacity="0.5"/>
+      <circle cx="53" cy="49" r="2" fill="#ffffff" opacity="0.4"/>
+      <circle cx="93" cy="49" r="2" fill="#ffffff" opacity="0.4"/>
+
+      <!-- Bucket Body -->
+      <g>
+        <defs>
+          <clipPath id="smallBucketClip">
+            <path d="M 40 76 L 110 76 L 102 138 L 48 138 Z"/>
+          </clipPath>
+        </defs>
+
+        <!-- Red Base -->
+        <path d="M 40 76 L 110 76 L 102 138 L 48 138 Z" fill="url(#bucketRed)"/>
+
+        <!-- White Stripes -->
+        <g clip-path="url(#smallBucketClip)">
+          <rect x="52" y="70" width="12" height="80" fill="#ffffff" transform="skewX(-4)"/>
+          <rect x="70" y="70" width="11" height="80" fill="#ffffff"/>
+          <rect x="88" y="70" width="12" height="80" fill="#ffffff" transform="skewX(4)"/>
+        </g>
+
+        <!-- Rim Shadow and Rim -->
+        <ellipse cx="75" cy="138" rx="27" ry="2.5" fill="rgba(0,0,0,0.15)"/>
+        <ellipse cx="75" cy="76" rx="35" ry="5.5" fill="#ffffff" stroke="#d4d4d8" stroke-width="0.8"/>
+        <ellipse cx="75" cy="74" rx="35" ry="4" fill="#fafafa"/>
+      </g>
+    </g>
+
+    <!-- ─── PREMIUM WORDMARK ─── -->
+    <g filter="url(#premium-shadow)">
+      <!-- "CINE" Part -->
+      <text x="155" y="154" class="brand-text cine-part">Cine</text>
+
+      <!-- "POP" Part -->
+      <!-- "P" of Pop -->
+      <text x="332" y="154" class="brand-text pop-part">P</text>
+
+      <!-- "o" of Pop -> CUSTOM GOLDEN POPCORN PLAY BUTTON -->
+      <g transform="translate(362, 82)">
+        <!-- Glowing outer drop-shadow for the popcorn -->
+        <path d="M 28 4 C 38 4, 46 10, 46 20 C 53 20, 58 26, 58 34 C 58 44, 48 50, 28 50 C 8 50, -2 44, -2 34 C -2 26, 3 20, 10 20 C 10 10, 18 4, 28 4 Z"
+              fill="url(#popKernHighlight)" stroke="#d97706" stroke-width="2.5" />
+        
+        <!-- Sparkle/Shine Highlight on Popcorn -->
+        <path d="M 12 18 C 14 12, 20 8, 28 8" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+
+        <!-- Triangular Play Button inside the popcorn -->
+        <polygon points="22,17 22,37 38,27" fill="#ffffff" filter="drop-shadow(0px 2px 2px rgba(0,0,0,0.3))"/>
+      </g>
+
+      <!-- "p" of Pop -->
+      <text x="418" y="154" class="brand-text pop-part">p</text>
+    </g>
+  </g>
+</svg>
