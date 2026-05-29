@@ -1,16 +1,4 @@
 # Auto-build the Android APK on every push.
-# Triggers:
-#   - push to main / master      → debug APK uploaded as workflow artifact
-#   - tag pushed (v1.2.3 etc.)   → release APK attached to a GitHub Release
-#   - manual run from Actions UI → debug APK artifact
-#
-# No secrets needed for debug builds. For signed release builds, add these
-# repo secrets and uncomment the "release" job at the bottom:
-#   ANDROID_KEYSTORE_BASE64   (base64 of your .keystore file)
-#   ANDROID_KEYSTORE_PASSWORD
-#   ANDROID_KEY_ALIAS
-#   ANDROID_KEY_PASSWORD
-
 name: Build Android APK
 
 on:
@@ -25,6 +13,8 @@ jobs:
   build-debug:
     runs-on: ubuntu-latest
     name: Build debug APK
+    permissions:
+      contents: write
     defaults:
       run:
         working-directory: android-capacitor
@@ -37,8 +27,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-          cache-dependency-path: android-capacitor/package-lock.json
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -93,114 +81,34 @@ jobs:
         id: find_apk
         run: |
           APK_PATH=$(find android/app/build/outputs/apk/debug -name "*.apk" | head -1)
-          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
-          echo "Found APK at $APK_PATH"
-          ls -la "$APK_PATH"
+          # Rename the compiled APK file to CinePop-TV.apk
+          mv "$APK_PATH" "android/app/build/outputs/apk/debug/CinePop-TV.apk"
+          echo "apk_path=android/app/build/outputs/apk/debug/CinePop-TV.apk" >> $GITHUB_OUTPUT
+          echo "Found APK at android/app/build/outputs/apk/debug/CinePop-TV.apk"
 
       - name: Upload debug APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: playimdb-debug-apk
+          name: CinePop-TV-Live
           path: android-capacitor/${{ steps.find_apk.outputs.apk_path }}
           retention-days: 30
 
-  build-release:
-    # Only on tag pushes — produces a signed release APK + .aab and attaches them
-    # to a GitHub Release. Requires the 4 keystore secrets listed at the top.
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: build-debug
-    runs-on: ubuntu-latest
-    name: Build signed release APK
-    defaults:
-      run:
-        working-directory: android-capacitor
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: android-capacitor/package-lock.json
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - uses: android-actions/setup-android@v3
-
-      - run: npm install
-      - run: npx cap add android || true
-      - run: cp android-overrides/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
-
-      - name: Copy icons + banner
-        run: |
-          mkdir -p android/app/src/main/res/{mipmap-mdpi,mipmap-hdpi,mipmap-xhdpi,mipmap-xxhdpi,mipmap-xxxhdpi,drawable}
-          for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
-            src="../icons/icon-192.png"
-            [ "$d" = "xxhdpi" ] || [ "$d" = "xxxhdpi" ] && src="../icons/icon-512.png"
-            cp "$src" "android/app/src/main/res/mipmap-$d/ic_launcher.png"
-            cp "$src" "android/app/src/main/res/mipmap-$d/ic_launcher_round.png"
-          done
-          cp ../icons/icon-512.png android/app/src/main/res/drawable/banner.png
-
-      - run: npx cap sync android
-
-      - name: Decode keystore
-        env:
-          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-        if: env.KS_B64 != ''
-        run: |
-          echo "$KS_B64" | base64 -d > android/app/release.keystore
-
-      - name: Inject signing config
-        if: env.KS_B64 != ''
-        env:
-          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: |
-          cat >> android/app/build.gradle <<EOF
-
-          android {
-              signingConfigs {
-                  release {
-                      storeFile file('release.keystore')
-                      storePassword "${KS_PASS}"
-                      keyAlias "${KEY_ALIAS}"
-                      keyPassword "${KEY_PASS}"
-                  }
-              }
-              buildTypes {
-                  release {
-                      signingConfig signingConfigs.release
-                  }
-              }
-          }
-          EOF
-
-      - name: Build release APK + AAB
-        run: |
-          chmod +x android/gradlew
-          cd android && ./gradlew assembleRelease bundleRelease --no-daemon
-
-      - name: Find artifacts
-        id: find
-        run: |
-          APK=$(find android/app/build/outputs/apk/release -name "*.apk" | head -1)
-          AAB=$(find android/app/build/outputs/bundle/release -name "*.aab" | head -1)
-          echo "apk=$APK" >> $GITHUB_OUTPUT
-          echo "aab=$AAB" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub Release with artifacts
+      - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            android-capacitor/${{ steps.find.outputs.apk }}
-            android-capacitor/${{ steps.find.outputs.aab }}
-          generate_release_notes: true
+          tag_name: latest
+          name: CinePop Latest TV Build
+          body: |
+            This release contains the latest automated builds of CinePop.
+            
+            ### ⬇️ Download Links:
+            * **`CinePop-TV.apk`** (Live version - loads instantly, auto-receives website updates)
+            * **`CinePop-TV-Offline.apk`** (Offline version - bundled UI, works without Cloudflare URL)
+            
+            ### 🔌 How to Install:
+            Sideload the APK onto your Android TV using "Send Files to TV" or an installer of your choice!
+          files: android-capacitor/${{ steps.find_apk.outputs.apk_path }}
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

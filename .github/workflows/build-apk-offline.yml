@@ -1,10 +1,3 @@
-# Builds a fully OFFLINE-bundled APK — the PWA files are packed inside the
-# APK itself, so the installed app works without an internet connection
-# (except for the IMDb search calls + the embedded video player, of course).
-#
-# Trigger:  manual ("Run workflow" button) or any push to main/master
-# Artifact: playimdb-offline-apk (download from Actions → run → Artifacts)
-
 name: Build OFFLINE Android APK
 
 on:
@@ -16,6 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Bundle PWA + build offline APK
+    permissions:
+      contents: write
     defaults:
       run:
         working-directory: android-capacitor
@@ -80,12 +75,34 @@ jobs:
         id: find_apk
         run: |
           APK=$(find android/app/build/outputs/apk/debug -name "*.apk" | head -1)
-          echo "Found: $APK ($(du -h "$APK" | cut -f1))"
-          echo "apk_path=$APK" >> $GITHUB_OUTPUT
+          # Rename compiled APK to CinePop-TV-Offline.apk
+          mv "$APK" "android/app/build/outputs/apk/debug/CinePop-TV-Offline.apk"
+          echo "Found: android/app/build/outputs/apk/debug/CinePop-TV-Offline.apk"
+          echo "apk_path=android/app/build/outputs/apk/debug/CinePop-TV-Offline.apk" >> $GITHUB_OUTPUT
 
       - name: Upload OFFLINE APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: playimdb-offline-apk
+          name: CinePop-TV-Offline
           path: android-capacitor/${{ steps.find_apk.outputs.apk_path }}
           retention-days: 90
+
+      - name: Create or Update GitHub Release with Offline APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: CinePop Latest TV Build
+          body: |
+            This release contains the latest automated builds of CinePop.
+            
+            ### ⬇️ Download Links:
+            * **`CinePop-TV.apk`** (Live version - loads instantly, auto-receives website updates)
+            * **`CinePop-TV-Offline.apk`** (Offline version - bundled UI, works without Cloudflare URL)
+            
+            ### 🔌 How to Install:
+            Sideload the APK onto your Android TV using "Send Files to TV" or an installer of your choice!
+          files: android-capacitor/${{ steps.find_apk.outputs.apk_path }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
