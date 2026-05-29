@@ -1,6 +1,6 @@
 // Offline shell cache for CinePop.
 // Bump CACHE on every release so old clients pick up the new shell.
-const CACHE = 'CinePop-v34';
+const CACHE = 'CinePop-v35';
 const ASSETS = [
   './',
   './index.html',
