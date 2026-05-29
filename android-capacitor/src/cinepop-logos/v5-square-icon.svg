@@ -48,24 +48,6 @@
     </radialGradient>
   </defs>
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&amp;display=swap');
-    
-    .brand-text {
-      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 78px;
-      font-weight: 900;
-      letter-spacing: -2.5px;
-      text-transform: uppercase;
-    }
-    .cine-part {
-      fill: url(#silverGrad);
-    }
-    .pop-part {
-      fill: url(#neonRedGrad);
-    }
-  </style>
-
   <!-- Rounded square background -->
   <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#bgGrad)"/>
 
@@ -123,14 +105,14 @@
       </g>
     </g>
 
-    <!-- ─── PREMIUM WORDMARK ─── -->
-    <g filter="url(#premium-shadow)">
+    <!-- ─── PREMIUM WORDMARK (With inline styling to prevent black-text rendering issues) ─── -->
+    <g filter="url(#premium-shadow)" style="font-family:'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size:78px; font-weight:900; text-transform:uppercase; letter-spacing:-2.5px;">
       <!-- "CINE" Part -->
-      <text x="155" y="154" class="brand-text cine-part">Cine</text>
+      <text x="155" y="154" fill="url(#silverGrad)">Cine</text>
 
       <!-- "POP" Part -->
       <!-- "P" of Pop -->
-      <text x="332" y="154" class="brand-text pop-part">P</text>
+      <text x="332" y="154" fill="url(#neonRedGrad)">P</text>
 
       <!-- "o" of Pop -> CUSTOM GOLDEN POPCORN PLAY BUTTON -->
       <g transform="translate(362, 82)">
@@ -146,7 +128,7 @@
       </g>
 
       <!-- "p" of Pop -->
-      <text x="418" y="154" class="brand-text pop-part">p</text>
+      <text x="418" y="154" fill="url(#neonRedGrad)">p</text>
     </g>
   </g>
 </svg>
