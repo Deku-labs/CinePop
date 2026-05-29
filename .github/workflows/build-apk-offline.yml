@@ -3,6 +3,7 @@ name: Build OFFLINE Android APK
 on:
   push:
     branches: [main, master]
+    tags: ['v*.*.*']
   workflow_dispatch:
 
 jobs:
@@ -39,14 +40,15 @@ jobs:
       - name: Install npm deps
         run: npm install
 
+      # 3) Create Android project
       - name: Create Android project
         run: npx cap add android || echo "android/ already exists"
 
-      # 3) Apply TV-friendly manifest (Leanback launcher etc.)
+      # 4) Apply TV-friendly manifest (Leanback launcher etc.)
       - name: Apply TV-ready AndroidManifest
         run: cp android-overrides/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
 
-      # 4) Copy app icons + 320x180 TV banner
+      # 5) Copy app icons + 320x180 TV banner
       - name: Copy icons + TV banner
         run: |
           # Delete adaptive launcher XML files to force Android to use our CinePop PNG icons!
@@ -62,17 +64,17 @@ jobs:
           done
           cp ../icons/icon-512.png android/app/src/main/res/drawable/banner.png
 
-      # 5) Final sync (copies bundled web assets into android/app/src/main/assets/public)
+      # 6) Final sync (copies bundled web assets into android/app/src/main/assets/public)
       - name: Capacitor sync
         run: npx cap sync android
 
-      # 6) Compile the APK
+      # 7) Compile the APK
       - name: Build debug APK
         run: |
           chmod +x android/gradlew
           cd android && ./gradlew assembleDebug --no-daemon
 
-      # 7) Hand it to you
+      # 8) Hand it to you
       - name: Find APK
         id: find_apk
         run: |
@@ -89,11 +91,22 @@ jobs:
           path: android-capacitor/${{ steps.find_apk.outputs.apk_path }}
           retention-days: 90
 
+      - name: Determine Release Tag
+        id: tag_info
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "is_tag=true" >> $GITHUB_OUTPUT
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+            echo "is_tag=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Create or Update GitHub Release with Offline APK
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: CinePop Latest TV Build
+          tag_name: ${{ steps.tag_info.outputs.tag }}
+          name: ${{ steps.tag_info.outputs.is_tag == 'true' && format('CinePop {0}', steps.tag_info.outputs.tag) || 'CinePop Latest TV Build' }}
           body: |
             This release contains the latest automated builds of CinePop.
             

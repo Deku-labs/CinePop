@@ -83,7 +83,7 @@ jobs:
         id: find_apk
         run: |
           APK_PATH=$(find android/app/build/outputs/apk/debug -name "*.apk" | head -1)
-          # Rename the compiled APK file to CinePop-TV.apk
+          # Rename compiled APK to CinePop-TV.apk
           mv "$APK_PATH" "android/app/build/outputs/apk/debug/CinePop-TV.apk"
           echo "apk_path=android/app/build/outputs/apk/debug/CinePop-TV.apk" >> $GITHUB_OUTPUT
           echo "Found APK at android/app/build/outputs/apk/debug/CinePop-TV.apk"
@@ -95,11 +95,22 @@ jobs:
           path: android-capacitor/${{ steps.find_apk.outputs.apk_path }}
           retention-days: 30
 
+      - name: Determine Release Tag
+        id: tag_info
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "is_tag=true" >> $GITHUB_OUTPUT
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+            echo "is_tag=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: CinePop Latest TV Build
+          tag_name: ${{ steps.tag_info.outputs.tag }}
+          name: ${{ steps.tag_info.outputs.is_tag == 'true' && format('CinePop {0}', steps.tag_info.outputs.tag) || 'CinePop Latest TV Build' }}
           body: |
             This release contains the latest automated builds of CinePop.
             
