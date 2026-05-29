@@ -55,6 +55,8 @@ jobs:
 
       - name: Copy icons + TV banner into res/
         run: |
+          # Delete adaptive launcher XML files to force Android to use our CinePop PNG icons!
+          rm -rf android/app/src/main/res/mipmap-anydpi-v26
           mkdir -p android/app/src/main/res/{mipmap-mdpi,mipmap-hdpi,mipmap-xhdpi,mipmap-xxhdpi,mipmap-xxxhdpi,drawable}
           cp ../icons/icon-192.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
           cp ../icons/icon-192.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
