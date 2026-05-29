@@ -105,14 +105,13 @@
       </g>
     </g>
 
-    <!-- ─── PREMIUM WORDMARK (With inline styling to prevent black-text rendering issues) ─── -->
-    <g filter="url(#premium-shadow)" style="font-family:'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size:78px; font-weight:900; text-transform:uppercase; letter-spacing:-2.5px;">
+    <!-- ─── PREMIUM WORDMARK (Presentation XML attributes for bulletproof non-CSS rendering) ─── -->
+    <g filter="url(#premium-shadow)">
       <!-- "CINE" Part -->
-      <text x="155" y="154" fill="url(#silverGrad)">Cine</text>
+      <text x="155" y="154" fill="url(#silverGrad)" font-family="'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="78" font-weight="900" letter-spacing="-2.5">CINE</text>
 
-      <!-- "POP" Part -->
       <!-- "P" of Pop -->
-      <text x="332" y="154" fill="url(#neonRedGrad)">P</text>
+      <text x="332" y="154" fill="url(#neonRedGrad)" font-family="'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="78" font-weight="900" letter-spacing="-2.5">P</text>
 
       <!-- "o" of Pop -> CUSTOM GOLDEN POPCORN PLAY BUTTON -->
       <g transform="translate(362, 82)">
@@ -127,8 +126,8 @@
         <polygon points="22,17 22,37 38,27" fill="#ffffff" filter="drop-shadow(0px 2px 2px rgba(0,0,0,0.3))"/>
       </g>
 
-      <!-- "p" of Pop -->
-      <text x="418" y="154" fill="url(#neonRedGrad)">p</text>
+      <!-- "P" of Pop (Capital P instead of lowercase p for perfect symmetry) -->
+      <text x="418" y="154" fill="url(#neonRedGrad)" font-family="'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="78" font-weight="900" letter-spacing="-2.5">P</text>
     </g>
   </g>
 </svg>
